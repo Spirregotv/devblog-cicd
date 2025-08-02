@@ -27,16 +27,22 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Establecer directorio de trabajo
 WORKDIR /app
 
-# ================================
-# ETAPA 4: INSTALACIÓN DE DEPENDENCIAS
-# ================================
-
-# Copiar requirements.txt primero para aprovechar el cache
+# ================================ 
+# ETAPA 4: INSTALACIÓN DE DEPENDENCIAS 
+# ================================ 
+ 
+# Copiar requirements.txt PRIMERO (optimización de Docker layers) 
+# ¿Por qué copiar requirements.txt antes que el resto del código? 
+# - Docker usa capas (layers) para optimizar builds 
+# - Si solo cambia el código, no necesita reinstalar dependencias 
+# - Esto hace los builds mucho más rápidos 
+# 
+#INSTALAR PARA PRODUCCION  
+RUN apt-get update && apt-get install -y \ 
+    curl \ 
+    && rm -rf /var/lib/apt/lists/* 
+ 
 COPY requirements.txt .
-
-# Actualizar pip e instalar dependencias
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
 
 # ================================
 # ETAPA 5: COPIAR CÓDIGO DE LA APLICACIÓN
@@ -48,17 +54,20 @@ COPY . .
 # ETAPA 6: CONFIGURACIÓN DE USUARIO
 # ================================
 
-RUN adduser --disabled-password --gecos '' appuser && \
-    chown -R appuser:appuser /app
-
-USER appuser
-
-# ================================
-# ETAPA 7: CONFIGURACIÓN DE RED
-# ================================
-
-# Exponer el puerto 5000 para Flask
-EXPOSE 5000
+#PARA PRODUCCION 
+# Health check 
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \ 
+    CMD curl -f http://localhost:$PORT/api/health || exit 1 
+# 
+# ================================ 
+# ETAPA 7: CONFIGURACIÓN DE RED 
+# ================================ 
+ 
+# Exponer el puerto 5000 (puerto por defecto de Flask) 
+# Esto es documentativo - le dice a otros desarrolladores qué puerto usar 
+# No abre automáticamente el puerto (eso se hace al ejecutar el contenedor) 
+#CAMBIAR PARA PRODUCCION  
+EXPOSE $PORT
 
 # ================================
 # ETAPA 8: COMANDO DE INICIO
@@ -66,3 +75,10 @@ EXPOSE 5000
 
 # Comando para iniciar Flask
 CMD ["python", "app.py"]
+
+# PYTHONDONTWRITEBYTECODE=1: Evita crear archivos .pyc (optimización) 
+ENV PYTHONUNBUFFERED=1 
+ENV PYTHONDONTWRITEBYTECODE=1 
+#AGREGAR PARA PRODUCCION  
+ENV FLASK_ENV=production 
+ENV PORT=5000 

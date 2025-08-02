@@ -1,21 +1,21 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
-from app.models import blog_storage, BlogPost
-from config import Config
-from app import create_app
-
-# Crear la aplicación usando la factory function
-app = create_app()
-
-if __name__ == '__main__':
-    """
-    Punto de entrada de la aplicación
-    """
-    print("Iniciando DevBlog...")
-    print(f"Servidor corriendo en: http://{Config.HOST}:{Config.PORT}")
-    print("Presiona Ctrl+C para detener el servidor")
-
-    app.run(
-        host=Config.HOST,
-        port=Config.PORT,
-        debug=Config.DEBUG
+import os 
+from app import create_app 
+ 
+# Crear aplicación 
+app = create_app() 
+ 
+if __name__ == '__main__': 
+    # Configuración para producción 
+    port = int(os.environ.get('PORT', 5000)) 
+    debug = os.environ.get('FLASK_ENV') != 'production' 
+     
+    print(f"Iniciando DevBlog...") 
+    print(f"Puerto: {port}") 
+    print(f"Debug: {debug}") 
+    print(f"Entorno: {os.environ.get('FLASK_ENV', 'development')}") 
+     
+    app.run( 
+        host='0.0.0.0', 
+        port=port, 
+        debug=debug 
     )
