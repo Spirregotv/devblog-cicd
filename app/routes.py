@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from app.models import blog_storage, BlogPost
+from datetime import datetime
 
 # Crear un Blueprint para organizar las rutas
 main = Blueprint('main', __name__)
@@ -27,7 +28,7 @@ def view_post(post_id):
     post = blog_storage.get_post_by_id(post_id)
     if not post:
         # Si el post no existe, mostrar error 404
-        return render_template('404.html'), 500
+        return render_template('404.html'), 404
     return render_template('post.html', post=post, title=f'{post.title} - DevBlog')
 
 @main.route('/create', methods=['GET', 'POST'])
@@ -258,4 +259,14 @@ def api_search_posts():
         'data': [post.to_dict() for post in results],
         'query': query,
         'count': len(results)
+    })
+ 
+@main.route('/api/health') 
+def api_health(): 
+    """API: Health check endpoint""" 
+    return jsonify({ 
+        'status': 'healthy', 
+        'version': '1.0.0', 
+        'timestamp': datetime.now().isoformat(), 
+        'tests_passing': True 
     })

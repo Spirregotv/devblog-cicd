@@ -6,6 +6,17 @@ class TestAPIEndpoints:
     """
     Pruebas para la API REST (endpoints JSON)
     """
+    def test_health_endpoint(self, client): 
+        """Test: Health check endpoint works""" 
+        response = client.get('/api/health') 
+     
+        assert response.status_code == 200 
+        assert response.content_type == 'application/json' 
+     
+        data = json.loads(response.data) 
+        assert data['status'] == 'healthy' 
+        assert data['version'] == '1.0.0' 
+        assert 'timestamp' in data 
 
     def test_get_all_posts_success(self, client):
         response = client.get('/api/posts')
