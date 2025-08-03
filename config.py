@@ -3,8 +3,8 @@ import os
 class Config:
     # Clave secreta para sesiones y formularios
     # En producción, esto debería ser una variable de entorno
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
-    
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-inproduction'
+
     # Configuración para el modo debug
     # True = muestra errores detallados, recarga automática
     # False = modo producción, más seguro

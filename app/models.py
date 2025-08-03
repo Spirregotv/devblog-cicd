@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import List, Dict, Optional
 
+
 class BlogPost:
     def __init__(self, title: str, content: str, author: str = "Admin"):
         """
@@ -27,7 +28,7 @@ class BlogPost:
             'summary': self.content[:150] + '...' if len(self.content) > 150 else self.content
         }
 
-    def update(self, title: str = None, content: str = None):
+    def update(self, title: Optional[str] = None, content: Optional[str] = None):
         """
         Actualiza el post con nuevos datos
         """
@@ -37,47 +38,52 @@ class BlogPost:
             self.content = content.strip()
         self.updated_at = datetime.now()  # Actualiza timestamp
 
+
 class BlogStorage:
     """
-    Clase para manejar el almacenamiento de posts
+    Clase para manejar el almacenamiento de posts.
     En producción real usarías PostgreSQL, MySQL, etc.
     """
     def __init__(self):
-        """Inicializa el almacenamiento con algunos posts de ejemplo"""
+        """
+        Inicializa el almacenamiento con algunos posts de ejemplo
+        """
         self._posts: List[BlogPost] = []
         self._next_id = 1
         self._create_sample_posts()
 
     def _create_sample_posts(self):
-        """Crea posts de ejemplo para demostración"""
+        """
+        Crea posts de ejemplo para demostración
+        """
         sample_posts = [
             {
                 'title': '¡Bienvenido a DevBlog!',
-                'content': '''Este es mi primer post en DevBlog, una aplicación creada para aprender DevOps y CI/CD.
-
-                En este blog compartiré mi experiencia aprendiendo:
-                - Desarrollo web con Flask
-                - Containerización con Docker
-                - Testing automatizado
-                - CI/CD con GitHub Actions
-                - Despliegue en la nube
-
-                ¡Espero que disfrutes leyendo tanto como yo disfruto escribiendo!''',
+                'content': '''Este es mi primer post en DevBlog, una
+aplicación creada para aprender DevOps y CI/CD.
+En este blog compartiré mi experiencia aprendiendo:
+- Desarrollo web con Flask
+- Containerización con Docker
+- Testing automatizado
+- CI/CD con GitHub Actions
+- Despliegue en la nube
+¡Espero que disfrutes leyendo tanto como yo disfruto
+escribiendo!''',
                 'author': 'DevOps Student'
             },
             {
                 'title': 'Mi experiencia con Docker',
-                'content': '''Docker ha sido una revelación en mi aprendizaje de DevOps.
-                La capacidad de empaquetar una aplicación con todas sus dependencias en un contenedor portable es increíble.
-                Ya no más "en mi máquina funciona"
-
-                Algunos beneficios que he descubierto:
-                - Consistencia entre entornos
-                - Fácil escalabilidad
-                - Aislamiento de aplicaciones
-                - Despliegues más confiables
-
-                ¿Cuál ha sido tu experiencia con Docker?''',
+                'content': '''Docker ha sido una revelación en mi
+aprendizaje de DevOps.
+La capacidad de empaquetar una aplicación con todas sus
+dependencias en un contenedor portable es increíble.
+Ya no más "en mi máquina funciona"
+Algunos beneficios que he descubierto:
+- Consistencia entre entornos
+- Fácil escalabilidad
+- Aislamiento de aplicaciones
+- Despliegues más confiables
+¿Cuál ha sido tu experiencia con Docker?''',
                 'author': 'DevOps Student'
             }
         ]
@@ -93,6 +99,10 @@ class BlogStorage:
     def create_post(self, post: BlogPost) -> BlogPost:
         """
         Crea un nuevo post
+        Args:
+            post: Instancia de BlogPost
+        Returns:
+            El post creado con ID asignado
         """
         post.id = self._next_id
         self._next_id += 1
@@ -102,12 +112,18 @@ class BlogStorage:
     def get_all_posts(self) -> List[BlogPost]:
         """
         Obtiene todos los posts ordenados por fecha (más recientes primero)
+        Returns:
+            Lista de posts ordenada
         """
         return sorted(self._posts, key=lambda x: x.created_at, reverse=True)
 
     def get_post_by_id(self, post_id: int) -> Optional[BlogPost]:
         """
         Busca un post por su ID
+        Args:
+            post_id: ID del post a buscar
+        Returns:
+            El post si existe, None si no existe
         """
         for post in self._posts:
             if post.id == post_id:
@@ -117,6 +133,12 @@ class BlogStorage:
     def update_post(self, post_id: int, title: str = None, content: str = None) -> Optional[BlogPost]:
         """
         Actualiza un post existente
+        Args:
+            post_id: ID del post a actualizar
+            title: Nuevo título (opcional)
+            content: Nuevo contenido (opcional)
+        Returns:
+            El post actualizado o None si no existe
         """
         post = self.get_post_by_id(post_id)
         if post:
@@ -127,6 +149,10 @@ class BlogStorage:
     def delete_post(self, post_id: int) -> bool:
         """
         Elimina un post
+        Args:
+            post_id: ID del post a eliminar
+        Returns:
+            True si se eliminó, False si no existía
         """
         post = self.get_post_by_id(post_id)
         if post:
@@ -137,6 +163,10 @@ class BlogStorage:
     def search_posts(self, query: str) -> List[BlogPost]:
         """
         Busca posts que contengan la query en título o contenido
+        Args:
+            query: Término de búsqueda
+        Returns:
+            Lista de posts que coinciden con la búsqueda
         """
         query = query.lower().strip()
         if not query:
@@ -144,7 +174,7 @@ class BlogStorage:
 
         results = []
         for post in self._posts:
-            if (query in post.title.lower() or query in post.content.lower()):
+            if query in post.title.lower() or query in post.content.lower():
                 results.append(post)
 
         results.sort(key=lambda x: (
@@ -154,5 +184,7 @@ class BlogStorage:
 
         return results
 
+
 # Instancia global del almacenamiento
+# En una aplicación real, esto sería inyectado como dependencia
 blog_storage = BlogStorage()

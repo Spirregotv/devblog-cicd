@@ -1,6 +1,8 @@
-# ================================
+# ====
 # ARCHIVOS DE DESARROLLO
-# ================================
+# ====
+
+# Cache de Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -25,33 +27,44 @@ wheels/
 *.egg
 MANIFEST
 
-# ================================
+# ====
 # ENTORNOS VIRTUALES
-# ================================
+# ====
+
+# Entornos virtuales de Python
 venv/
 env/
 ENV/
 env.bak/
 venv.bak/
 
-# ================================
+# ====
 # ARCHIVOS DE CONTROL DE VERSIONES
-# ================================
+# ====
+
+# Git
 .git/
 .gitignore
 .gitattributes
 
-# ================================
+# ====
 # ARCHIVOS DE EDITORES/IDEs
-# ================================
+# ====
+
+# Visual Studio Code
 .vscode/
+
+# PyCharm
 .idea/
+
+# Sublime Text
 *.sublime-project
 *.sublime-workspace
 
-# ================================
+# ====
 # ARCHIVOS DEL SISTEMA OPERATIVO
-# ================================
+# ====
+
 # Windows
 Thumbs.db
 ehthumbs.db
@@ -66,9 +79,11 @@ $RECYCLE.BIN/
 # Linux
 *~
 
-# ================================
+# ====
 # ARCHIVOS DE TESTING Y CI/CD
-# ================================
+# ====
+
+# Coverage reports
 htmlcov/
 .tox/
 .coverage
@@ -80,17 +95,23 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
-# ================================
+# ====
 # ARCHIVOS DE DOCUMENTACIÓN
-# ================================
+# ====
+
+# Documentación
 docs/_build/
 README.md
 *.md
 
-# ================================
+# ====
 # ARCHIVOS ESPECÍFICOS DEL PROYECTO
-# ================================
+# ====
+
+# Logs de desarrollo
 *.log
+
+# Archivos temporales
 *.tmp
 *.temp
 

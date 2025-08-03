@@ -146,3 +146,22 @@ jobs:
           echo "🐳 Docker build:    Success"
           echo "🔒 Security scan:   Passed"
           echo "🚀 Deployment would happen here..."
+   # Paso 5: Guardar imagen como artefacto (opcional) 
+    - name: Save Docker image 
+      run: | 
+        docker save devblog:latest | gzip > devblog-image.tar.gz 
+     
+    - name:  Upload Docker image artifact 
+      uses: actions/upload-artifact@v3 
+      with: 
+        name: docker-image 
+        path: devblog-image.tar.gz 
+        retention-days: 1
+        # Paso 6: Subir reporte de cobertura (ACTUALIZADO) 
+    - name:  Upload coverage reports 
+      uses: actions/upload-artifact@v4 
+      if: always() 
+      with: 
+        name: coverage-report 
+        path: coverage.xml 
+        retention-days: 30 
